@@ -1,0 +1,17 @@
+html {
+  /**--lumo-primary-text-color: #2F446E;
+  --lumo-primary-color: black;
+  --lumo-base-color: #d9dde3;**/
+}
+
+/*Ширина меню*/
+vaadin-app-layout::part(drawer) {
+  width: 400px;
+}
+
+/**Пока не удалось сделать переносы строк для пунктов меню
+vaadin-side-nav-item > :not(slot) {
+    color: green;
+    white-space: normal !important;
+}
+**/
