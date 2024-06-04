@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         //чтобы не палить часть sessionId, сделаем от нее md5. Почему берем только первые 6 символов? Чтобы невозможно было восстановить sessionId и чтобы не был сильно длинным toString от пользователя
         String md5Hex = DigestUtils.md5Hex(session.getId().substring(0, 6)).toUpperCase();
         if (currentUser == null) {
-            currentUser = new User(md5Hex.substring(0, 6), Role.PASSANGER);
+            currentUser = new User(md5Hex.substring(0, 6), Role.PASSENGER);
             session.setAttribute(USER_SESSION_KEY, currentUser);
             log.info("Новый пользователь создан {}", currentUser);
         } else {

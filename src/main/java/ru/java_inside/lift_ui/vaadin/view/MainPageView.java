@@ -10,11 +10,12 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -44,13 +45,13 @@ public final class MainPageView extends VerticalLayout {
     private final UserService userService;
     private final LiftService liftService;
     private final ComboBox<Role> selectRoleComboBox = new ComboBox<>();
-    private final TextArea roleDescTextArea = new TextArea();
+    private final Span roleSpan = new Span();
     private final IntegerField userfloorIntegerField = new IntegerField();
     private final IntegerField goTofloorIntegerField = new IntegerField();
-    private final Button callFloorButton = new Button("вызвать на этаж");
-    private final Button stepOnButton = new Button("войти в лифт");
-    private final Button goToFloorButton = new Button("поехать на этаж");
-    private final Button repairButton = new Button("Починить");
+    private final Button callFloorButton = new Button("вызвать на этаж", VaadinIcon.TOUCH.create());
+    private final Button stepOnButton = new Button("войти в лифт", VaadinIcon.SIGN_IN.create());
+    private final Button goToFloorButton = new Button("поехать на этаж", VaadinIcon.LIST_OL.create());
+    private final Button repairButton = new Button("Починить", VaadinIcon.TOOLS.create());
 
     private Registration pollerRegistration = null;
 
@@ -74,13 +75,10 @@ public final class MainPageView extends VerticalLayout {
         selectRoleComboBox.addValueChangeListener(e -> {
             Role role = e.getValue();
             userService.switchCurrentRole(role);
-            updateDescTextArea();
+            updateRoleDesc();
             UI.getCurrent().navigate(MainPageView.class);
         });
         selectRoleComboBox.setValue(userService.getCurrentUser().getRole());
-
-        roleDescTextArea.setWidth("100%");
-        roleDescTextArea.setHeight("100px");
 
         userfloorIntegerField.setValue(1);
         userfloorIntegerField.setMin(1);
@@ -141,11 +139,9 @@ public final class MainPageView extends VerticalLayout {
         });
     }
 
-    private void updateDescTextArea() {
-        roleDescTextArea.setReadOnly(false);
+    private void updateRoleDesc() {
         Role role = selectRoleComboBox.getValue();
-        roleDescTextArea.setValue(role.getDescription());
-        roleDescTextArea.setReadOnly(true);
+        roleSpan.setText(role.getDescription());
     }
 
     /**
@@ -223,8 +219,9 @@ public final class MainPageView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        HorizontalLayout layoutH = new HorizontalLayout(selectRoleComboBox, roleDescTextArea);
+        HorizontalLayout layoutH = new HorizontalLayout(selectRoleComboBox, roleSpan);
         layoutH.setSizeFull();
+        layoutH.setAlignItems(Alignment.CENTER);
 
         HorizontalLayout callLayoutH = new HorizontalLayout(
                 new Span("Я на этаже:"), userfloorIntegerField,
@@ -239,6 +236,7 @@ public final class MainPageView extends VerticalLayout {
         insideLiftLayoutH.setAlignItems(Alignment.CENTER);
 
         add(layoutH);
+        add(new Hr());
         add(callLayoutH);
         add(insideLiftLayoutH);
         add(repairButton);

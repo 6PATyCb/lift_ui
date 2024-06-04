@@ -27,7 +27,7 @@ public class ApplicationVaadinServiceInitListener implements VaadinServiceInitLi
     @Override
     public void serviceInit(ServiceInitEvent event) {
         event.getSource().addSessionInitListener(initEvent -> {
-            log.info("A new Session has been initialized!");
+            log.info("Новая сессия создана");
             WrappedSession session = initEvent.getSession().getSession();
             sessionService.sessionCreated(session);
             //Добавим обработчик неперехваченных исключений
@@ -37,7 +37,7 @@ public class ApplicationVaadinServiceInitListener implements VaadinServiceInitLi
             });
         });
         event.getSource().addSessionDestroyListener(e -> {
-            log.info("A Session has been destroyed!");
+            log.info("Сессия уничтожена");
             WrappedSession session = e.getSession().getSession();
             sessionService.sessionDestroyed(session);
 

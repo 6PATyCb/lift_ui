@@ -15,7 +15,6 @@ import com.vaadin.flow.shared.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.java_inside.lift_ui.lift.LiftService;
 import ru.java_inside.lift_ui.lift.LiftState;
-import ru.java_inside.lift_ui.session.SessionService;
 
 /**
  *
@@ -25,28 +24,20 @@ import ru.java_inside.lift_ui.session.SessionService;
 @PageTitle("Состояние лифта")
 public class LiftStateView extends VerticalLayout {
 
-    private final Span sessionsCountSpan = new Span();
     private final Span liftStateSpan = new Span();
     private final LiftService liftService;
-    private final SessionService sessionService;
     private Registration pollerRegistration = null;
 
     public LiftStateView(
-            @Autowired LiftService liftService,
-            @Autowired SessionService sessionService
+            @Autowired LiftService liftService
     ) {
         this.liftService = liftService;
-        this.sessionService = sessionService;
-        add(sessionsCountSpan);
         add(liftStateSpan);
         doPoll();
         pollerRegistration = UI.getCurrent().addPollListener(e -> doPoll());
     }
 
     private void doPoll() {
-        {//обновим количество сессий
-            sessionsCountSpan.setText(String.format("Сессий: %d", sessionService.getSessionsCount()));
-        }
         {//считаем liftService
             LiftState liftState = liftService.getLiftState();
             liftStateSpan.setText(liftState.toString());

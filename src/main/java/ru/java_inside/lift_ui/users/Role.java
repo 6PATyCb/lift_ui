@@ -9,7 +9,7 @@ package ru.java_inside.lift_ui.users;
  * @author 6PATyCb
  */
 public enum Role {
-    PASSANGER("Пассажир", "Обычный пользователь лифта"),
+    PASSENGER("Пассажир", "Обычный пользователь лифта"),
     LIFT_ENGENEER("Лифтер", "Тот кто может починить лифт");
 
     private final String name;

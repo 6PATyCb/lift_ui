@@ -124,8 +124,8 @@ public class MainAppLayout extends AppLayout {
 
         SideNavItem main = new SideNavItem("Главная", MainPageView.class, VaadinIcon.FLAG.create());
 
-        SideNavItem liftState = new SideNavItem("Состояние лифта", LiftStateView.class);
-        SideNavItem usersOnline = new SideNavItem("Пользователи онлайн", OnlineUsersListView.class);
+        SideNavItem liftState = new SideNavItem("Состояние лифта", LiftStateView.class, VaadinIcon.BUILDING.create());
+        SideNavItem usersOnline = new SideNavItem("Пользователи онлайн", OnlineUsersListView.class, VaadinIcon.GROUP.create());
 //        services.setPrefixComponent(VaadinIcon.EXCHANGE.create());
 //        addSideNavItem(TestEmdppKafkaServiceView.class, services);
 //        addSideNavItem(TestEmdppRestServiceView.class, services);
