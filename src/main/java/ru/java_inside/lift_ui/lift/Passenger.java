@@ -23,10 +23,6 @@ import ru.java_inside.lift_ui.users.User;
 public class Passenger {
 
     /**
-     * Максимальное время нахождения в лифте без указания этажа для поездки
-     */
-    private static final int MAX_TIME_IN_LIFT_SEC = 15;
-    /**
      * Этаж куда хочет доехать пассажир
      */
     private Byte floor;
@@ -36,10 +32,10 @@ public class Passenger {
      */
     private final LocalDateTime entered;
 
-    public boolean isTimeToLeave(LocalDateTime now) {
+    public boolean isTimeToLeave(int maxTimeoutSecs, LocalDateTime now) {
         if (entered == null || now == null) {
             throw new IllegalArgumentException();
         }
-        return now.minusSeconds(MAX_TIME_IN_LIFT_SEC).isAfter(entered);
+        return now.minusSeconds(maxTimeoutSecs).isAfter(entered);
     }
 }

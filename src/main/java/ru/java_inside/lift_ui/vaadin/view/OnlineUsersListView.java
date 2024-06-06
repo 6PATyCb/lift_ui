@@ -39,7 +39,6 @@ public class OnlineUsersListView extends VerticalLayout {
         this.userService = userService;
         this.sessionService = sessionService;
 
-        //      grid.setSizeFull();
         update();
         add(new Button("Обновить", LiftUiIcons.refresh(), e -> {
             update();
@@ -50,7 +49,11 @@ public class OnlineUsersListView extends VerticalLayout {
     }
 
     private void update() {
-        List<User> users = sessionService.getSessions().entrySet().stream().map(Entry::getValue).map(session -> userService.readUserFromSession(session)).filter(user -> user != null).collect(Collectors.toList());
+        List<User> users = sessionService.getSessions().entrySet().stream()
+                .map(Entry::getValue)
+                .map(session -> userService.readUserFromSession(session))
+                .filter(user -> user != null)
+                .collect(Collectors.toList());
         grid.setItems(users);
         countSpan.setText(String.format("Записей: %d", users.size()));
     }

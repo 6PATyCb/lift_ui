@@ -8,6 +8,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.java_inside.lift_ui.LiftUiException;
@@ -22,6 +23,15 @@ import ru.java_inside.lift_ui.users.User;
 @Slf4j
 @Component
 public class LiftEngine {
+
+    /**
+     * Максимальное время нахождения в лифте без указания этажа для поездки, сек
+     */
+    private int maxPassengerTimeout;
+    /**
+     *
+     */
+    private double breakChance;
 
     private Clock clock;
 
@@ -77,7 +87,7 @@ public class LiftEngine {
                         log.info(lastStateMessage);
                         return;
                     }
-                    if (passenger.isTimeToLeave(LocalDateTime.now(clock))) {
+                    if (passenger.isTimeToLeave(maxPassengerTimeout, LocalDateTime.now(clock))) {
                         currentAction = LiftAction.NO_ACTION_WITH_PASSANGER;
                         lastStateMessage = String.format("Пассажир %s вышел из лифта из-за неактивности на %d этаже", passenger.getUser(), currentFloor);
                         passenger = null;
@@ -126,7 +136,7 @@ public class LiftEngine {
         if (broken) {
             return;
         }
-        broken = Math.random() > 0.9;
+        broken = Math.random() < breakChance;
         if (broken) {
             beforeBreakAction = currentAction;
             currentAction = LiftAction.BROKEN;
@@ -227,8 +237,20 @@ public class LiftEngine {
         log.info(lastStateMessage);
     }
 
+    @Value("${lift.maxPassengerTimeout:15}")
+    public synchronized void setMaxPassengerTimeout(int maxPassengerTimeout) {
+        //    System.out.println("!!!" + maxPassengerTimeout);
+        this.maxPassengerTimeout = maxPassengerTimeout;
+    }
+
+    @Value("${lift.break_chance:0.1}")
+    public synchronized void setBreakChance(double breakChance) {
+        System.out.println("!!!" + breakChance);
+        this.breakChance = breakChance;
+    }
+
     @Autowired
-    public void setClock(Clock clock) {
+    public synchronized void setClock(Clock clock) {
         this.clock = clock;
     }
 

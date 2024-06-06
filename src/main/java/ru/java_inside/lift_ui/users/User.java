@@ -19,6 +19,7 @@ import lombok.ToString;
 public class User {
 
     private final String id;
+    private final String name;
     private final Role role;
 
     @Override

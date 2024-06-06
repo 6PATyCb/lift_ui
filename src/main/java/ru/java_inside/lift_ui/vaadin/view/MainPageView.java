@@ -56,7 +56,6 @@ public final class MainPageView extends VerticalLayout {
     private Registration pollerRegistration = null;
 
     private Dialog liftStatusDialog = null;
-//    private final String contextPath = VaadinServlet.getCurrent().getServletContext().getContextPath();
 
     public MainPageView(
             @Autowired UserService userService,
