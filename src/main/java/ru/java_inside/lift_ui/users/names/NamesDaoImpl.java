@@ -16,14 +16,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class NamesDaoImpl extends NamedParameterJdbcDaoSupport implements NamesDao {
 
-    @Autowired
-    public void setLiftJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        setJdbcTemplate(jdbcTemplate);
-    }
-
     @Override
     public String getRandomName() {
         return getJdbcTemplate().queryForObject("select name from lift.rus_names order by random() limit 1", String.class);
+    }
+
+    @Autowired
+    public void setLiftJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        setJdbcTemplate(jdbcTemplate);
     }
 
 }

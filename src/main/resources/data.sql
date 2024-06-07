@@ -17,3 +17,8 @@ INSERT INTO lift.rus_names (name,is_female) VALUES
   ('Галина',1),
   ('Светлана',1),
   ('Ольга',1);
+
+INSERT INTO lift.lift_ride (ridedFloors,userId,created) VALUES
+  (4,'asdge1','2024-06-08 13:00:00'),
+  (7,'34efv2','2024-06-08 14:22:00'),
+  (12,'d3hfef','2024-06-08 18:03:00');

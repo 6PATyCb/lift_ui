@@ -87,10 +87,11 @@ public class MainAppLayout extends AppLayout {
 
         SideNavItem liftState = new SideNavItem("Состояние лифта", LiftStateView.class, VaadinIcon.BUILDING.create());
         SideNavItem usersOnline = new SideNavItem("Пользователи онлайн", OnlineUsersListView.class, VaadinIcon.GROUP.create());
+        SideNavItem liftRides = new SideNavItem("История поездок", LiftRideListView.class, VaadinIcon.USER_CLOCK.create());
         SideNavItem h2Admin = new SideNavItem("Админка H2DB", H2dbAdminView.class, VaadinIcon.DATABASE.create());
 
         SideNav nav = new SideNav();
-        nav.addItem(main, liftState, usersOnline, h2Admin);
+        nav.addItem(main, liftState, usersOnline, liftRides, h2Admin);
         addToDrawer(nav);
     }
 

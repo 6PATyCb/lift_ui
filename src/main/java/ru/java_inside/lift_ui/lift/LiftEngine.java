@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.java_inside.lift_ui.LiftUiException;
+import ru.java_inside.lift_ui.lift.lift_ride.LiftRideEvent;
 import ru.java_inside.lift_ui.users.Role;
 import ru.java_inside.lift_ui.users.User;
 
@@ -23,6 +25,9 @@ import ru.java_inside.lift_ui.users.User;
 @Slf4j
 @Component
 public class LiftEngine {
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * Максимальное время нахождения в лифте без указания этажа для поездки, сек
@@ -80,11 +85,14 @@ public class LiftEngine {
         {//когда мы находимся на нужном этаже
             if (currentFloor == waitFloor) {
                 if (passenger != null) {
-                    if (passenger.getFloor() != null && waitFloor == passenger.getFloor()) {
+                    if (passenger.getToFloor() != null && waitFloor == passenger.getToFloor()) {
                         currentAction = LiftAction.NO_ACTION_WITH_PASSANGER;
-                        lastStateMessage = String.format("Пассажир %s вышел из лифта на %d этаже", passenger.getUser(), currentFloor);
+                        int ridedFloors = passenger.getRidedFloors();
+                        lastStateMessage = String.format("Пассажир %s вышел из лифта на %d этаже, проехав %d этажей", passenger.getUser(), currentFloor, ridedFloors);
+                        LiftRideEvent event = new LiftRideEvent(ridedFloors, passenger.getUser(), this, clock);
                         passenger = null;
                         log.info(lastStateMessage);
+                        applicationEventPublisher.publishEvent(event);
                         return;
                     }
                     if (passenger.isTimeToLeave(maxPassengerTimeout, LocalDateTime.now(clock))) {
@@ -185,7 +193,7 @@ public class LiftEngine {
         if (passenger != null) {
             throw new IllegalStateException("Нельзя войти в лифт когда он уже заполнен");
         }
-        passenger = new Passenger(null, user, LocalDateTime.now(clock));
+        passenger = new Passenger(currentFloor, null, user, LocalDateTime.now(clock));
         lastStateMessage = String.format("Пассажир %s вошел в лифт", passenger.getUser());
         log.info(lastStateMessage);
     }
@@ -210,7 +218,7 @@ public class LiftEngine {
         if (currentFloor == floor) {
             throw new IllegalStateException("Мы и так уже находимся на этом этаже");
         }
-        passenger.setFloor(floor);
+        passenger.setToFloor(floor);
         waitFloor = floor;
         lastStateMessage = String.format("Пассажир %s в лифте нажал на копку %d", passenger.getUser(), floor);
         log.info(lastStateMessage);
@@ -245,7 +253,7 @@ public class LiftEngine {
 
     @Value("${lift.break_chance:0.1}")
     public synchronized void setBreakChance(double breakChance) {
-        System.out.println("!!!" + breakChance);
+        //    System.out.println("!!!" + breakChance);
         this.breakChance = breakChance;
     }
 

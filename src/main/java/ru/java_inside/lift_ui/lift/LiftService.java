@@ -37,9 +37,9 @@ public interface LiftService {
      * Поездка на этаж
      *
      * @param user
-     * @param floor этаж на который нужно ехать на лифте
+     * @param toFloor этаж на который нужно ехать на лифте
      */
-    void goToFloor(User user, byte floor);
+    void goToFloor(User user, byte toFloor);
 
     /**
      * Починить лифт

@@ -126,6 +126,7 @@ public final class MainPageView extends VerticalLayout {
                 VaadinUtils.showErrorLongNotification(String.format("Произошла ошибка %s", e.toString()), e);
             }
         });
+        repairButton.setTooltipText("Только лифтер может чинить лифт находясь с ним на одном этаже");
         repairButton.addClickListener(ev -> {
             try {
                 User currentUser = userService.getCurrentUser();
@@ -225,7 +226,8 @@ public final class MainPageView extends VerticalLayout {
         HorizontalLayout callLayoutH = new HorizontalLayout(
                 new Span("Я на этаже:"), userfloorIntegerField,
                 callFloorButton,
-                stepOnButton
+                stepOnButton,
+                repairButton
         );
         callLayoutH.setAlignItems(Alignment.CENTER);
         HorizontalLayout insideLiftLayoutH = new HorizontalLayout(
@@ -238,7 +240,6 @@ public final class MainPageView extends VerticalLayout {
         add(new Hr());
         add(callLayoutH);
         add(insideLiftLayoutH);
-        add(repairButton);
 
         UI.getCurrent().setPollInterval(500);
     }
