@@ -12,6 +12,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -24,9 +26,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class LiftRideDaoImpl extends NamedParameterJdbcDaoSupport implements LiftRideDao {
-
+    
+    public static final String CACHE_NAME = "LiftRideDaoImpl";
+    
     private Clock clock;
 
+    @CacheEvict(cacheNames = CACHE_NAME, allEntries = true)
     @Override
     public void saveLiftRide(LiftRide liftRide) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
@@ -45,6 +50,7 @@ public class LiftRideDaoImpl extends NamedParameterJdbcDaoSupport implements Lif
         getNamedParameterJdbcTemplate().update(sql.toString(), parameterSource);
     }
 
+    @Cacheable(cacheNames = CACHE_NAME)
     @Override
     public List<LiftRide> getLast100LiftRides() {
         return getJdbcTemplate().query("select * from lift.lift_ride order by created desc limit 100", new LiftRideRowMapper());

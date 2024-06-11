@@ -12,5 +12,7 @@ import java.util.List;
  */
 public interface LiftRideService {
 
+    void saveLiftRide(LiftRide liftRide);
+
     List<LiftRide> getLast100LiftRides();
 }

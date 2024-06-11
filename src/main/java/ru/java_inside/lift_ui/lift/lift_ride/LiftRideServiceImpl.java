@@ -24,6 +24,11 @@ public class LiftRideServiceImpl implements LiftRideService, ApplicationListener
     }
 
     @Override
+    public void saveLiftRide(LiftRide liftRide) {
+        liftRideDao.saveLiftRide(liftRide);
+    }
+
+    @Override
     public List<LiftRide> getLast100LiftRides() {
         return liftRideDao.getLast100LiftRides();
     }

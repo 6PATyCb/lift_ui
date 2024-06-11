@@ -4,11 +4,17 @@
  */
 package ru.java_inside.lift_ui;
 
-import java.time.Clock;
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -18,13 +24,33 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @PropertySource(ignoreResourceNotFound = false, value = "classpath:application.properties")
 @ComponentScan("ru.java_inside.lift_ui.*")
+@Import(CoreWebAppConfig.class)
 @EnableScheduling
 public class MyWebAppConfig {
 
     public static final String PROFILE = "${spring.profiles.active:default}";
 
     @Bean
-    public Clock clock() {
-        return Clock.systemDefaultZone();
+    public DataSource dataSource() {
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        builder.setType(EmbeddedDatabaseType.H2)
+                .setName("lift")
+                .setScriptEncoding("UTF-8");
+        return builder.build();
+    }
+
+    @Bean
+    @Order(value = 2)
+    public DataSourceTransactionManager txManager() {
+        DataSourceTransactionManager dstm = new DataSourceTransactionManager();
+        dstm.setDataSource(dataSource());
+        return dstm;
+    }
+
+    @Bean()
+    public JdbcTemplate jdbcTemplate() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(dataSource());
+        return jdbcTemplate;
     }
 }

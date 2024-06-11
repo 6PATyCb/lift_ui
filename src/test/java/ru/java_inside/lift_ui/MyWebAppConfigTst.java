@@ -4,18 +4,18 @@
  */
 package ru.java_inside.lift_ui;
 
-import java.time.Clock;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  *
@@ -23,14 +23,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @Configuration
 @PropertySource(ignoreResourceNotFound = false, value = "classpath:application.properties")
-@ComponentScan("ru.java_inside.lift_ui.*")
-@EnableScheduling
+@ComponentScan(basePackages = "ru.java_inside.lift_ui.*", excludeFilters = {
+    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MyWebAppConfig.class)})
+@Import(CoreWebAppConfig.class)
 public class MyWebAppConfigTst {
-
-    @Bean
-    public Clock clock() {
-        return Clock.systemDefaultZone();
-    }
 
     @Bean
     public DataSource dataSource() {
@@ -39,7 +35,7 @@ public class MyWebAppConfigTst {
                 .setName("forTest")
                 .setScriptEncoding("UTF-8")
                 .addScript("classpath:schema.sql")
-                .addScript("classpath:data.sql");
+                .addScript("classpath:data_test.sql");
         return builder.build();
     }
 

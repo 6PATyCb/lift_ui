@@ -18,6 +18,7 @@
 * Spring boot 3
 * Визуальный интерфейс - Vaadin 24
 * БД - H2DB, взаимодействие через Spring JDBC
+* Кэширование - самое простое, через Spring cache abstraction
 * Тестирование - junit + spring + H2DB
 
 Реализован лифт со следующими функциями:
