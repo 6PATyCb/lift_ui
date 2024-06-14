@@ -1,12 +1,20 @@
+@import "theme-editor.css";
 html {
-  /**--lumo-primary-text-color: #2F446E;
-  --lumo-primary-color: black;
-  --lumo-base-color: #d9dde3;**/
+    /**--lumo-primary-text-color: #2F446E;
+    --lumo-primary-color: black;
+    --lumo-base-color: #d9dde3;**/
 }
 
 /*Ширина меню*/
 vaadin-app-layout::part(drawer) {
-  width: 400px;
+    width: 250px;
+}
+
+div.as_panel {
+    background-image: linear-gradient(var(--lumo-contrast-5pct), var(--lumo-contrast-5pct));
+    border-radius: var(--lumo-border-radius-m);
+    padding: var(--lumo-space-m);
+    /*color: blue;*/
 }
 
 /**Пока не удалось сделать переносы строк для пунктов меню

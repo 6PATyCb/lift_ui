@@ -34,6 +34,7 @@ import ru.java_inside.lift_ui.users.User;
 import ru.java_inside.lift_ui.users.UserService;
 import ru.java_inside.lift_ui.vaadin.LiftUiIcons;
 import ru.java_inside.lift_ui.vaadin.VaadinUtils;
+import ru.java_inside.lift_ui.vaadin.custom.Panel;
 
 @PermitAll
 @Route(value = "", layout = MainAppLayout.class)
@@ -219,27 +220,38 @@ public final class MainPageView extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        HorizontalLayout layoutH = new HorizontalLayout(selectRoleComboBox, roleSpan);
-        layoutH.setSizeFull();
-        layoutH.setAlignItems(Alignment.CENTER);
 
-        HorizontalLayout callLayoutH = new HorizontalLayout(
+        HorizontalLayout userLayoutH = new HorizontalLayout(selectRoleComboBox, roleSpan);
+        userLayoutH.setSizeFull();
+        userLayoutH.setAlignItems(Alignment.CENTER);
+
+        Panel userPanel = new Panel("Пользователь");
+        userPanel.add(userLayoutH);
+
+        HorizontalLayout outsideLayoutH = new HorizontalLayout(
                 new Span("Я на этаже:"), userfloorIntegerField,
                 callFloorButton,
                 stepOnButton,
                 repairButton
         );
-        callLayoutH.setAlignItems(Alignment.CENTER);
+        outsideLayoutH.setAlignItems(Alignment.CENTER);
+
+        Panel outsidePanel = new Panel("В подъезде");
+        outsidePanel.add(outsideLayoutH);
+
         HorizontalLayout insideLiftLayoutH = new HorizontalLayout(
                 new Span("Я еду на этаж:"), goTofloorIntegerField,
                 goToFloorButton
         );
         insideLiftLayoutH.setAlignItems(Alignment.CENTER);
 
-        add(layoutH);
+        Panel insidePanel = new Panel("В лифте");
+        insidePanel.add(insideLiftLayoutH);
+
+        add(userPanel);
         add(new Hr());
-        add(callLayoutH);
-        add(insideLiftLayoutH);
+        add(outsidePanel);
+        add(insidePanel);
 
         UI.getCurrent().setPollInterval(500);
     }

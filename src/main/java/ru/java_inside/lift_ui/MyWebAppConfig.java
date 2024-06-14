@@ -5,6 +5,7 @@
 package ru.java_inside.lift_ui;
 
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,12 +30,17 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MyWebAppConfig {
 
     public static final String PROFILE = "${spring.profiles.active:default}";
+    public static final String DB_URL = "${spring.datasource.url}";
+    @Value(DB_URL)
+    private String dbUrl;
 
     @Bean
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        String dbName = dbUrl.replaceFirst("^.+:([^:]+)$", "$1");
+      //  System.out.println("!!" + dbName);
         builder.setType(EmbeddedDatabaseType.H2)
-                .setName("lift")
+                .setName(dbName)
                 .setScriptEncoding("UTF-8");
         return builder.build();
     }

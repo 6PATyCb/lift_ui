@@ -24,7 +24,12 @@ import ru.java_inside.lift_ui.lift.LiftState;
 @PageTitle("Состояние лифта")
 public class LiftStateView extends VerticalLayout {
 
-    private final Span liftStateSpan = new Span();
+    private final Span liftFullStateSpan = new Span();
+    private final Span currentFloorSpan = new Span();
+    private final Span passangerSpan = new Span();
+    private final Span lastMsgSpan = new Span();
+    private final Span currentActionSpan = new Span();
+    private final Span brokenSpan = new Span();
     private final LiftService liftService;
     private Registration pollerRegistration = null;
 
@@ -32,7 +37,12 @@ public class LiftStateView extends VerticalLayout {
             @Autowired LiftService liftService
     ) {
         this.liftService = liftService;
-        add(liftStateSpan);
+        add(liftFullStateSpan);
+        add(currentFloorSpan);
+        add(passangerSpan);
+        add(lastMsgSpan);
+        add(currentActionSpan);
+        add(brokenSpan);
         doPoll();
         pollerRegistration = UI.getCurrent().addPollListener(e -> doPoll());
     }
@@ -40,7 +50,12 @@ public class LiftStateView extends VerticalLayout {
     private void doPoll() {
         {//считаем liftService
             LiftState liftState = liftService.getLiftState();
-            liftStateSpan.setText(liftState.toString());
+            liftFullStateSpan.setText(String.format("Полное состояние: %s", liftState.toString()));
+            currentFloorSpan.setText(String.format("Текущий этаж: %d", liftState.currentFloor));
+            passangerSpan.setText(String.format("Пассажир: %s", liftState.user == null ? "Нет" : liftState.user));
+            lastMsgSpan.setText(String.format("Последнее сообщение: %s", liftState.lastStateMessage));
+            currentActionSpan.setText(String.format("Текущее действие: %s", liftState.action));
+            brokenSpan.setText(liftState.broken ? "Состояние: Сломан" : "Состояние: Работает");
         }
     }
 
