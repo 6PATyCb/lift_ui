@@ -4,6 +4,7 @@
  */
 package ru.java_inside.lift_ui.users.names;
 
+import java.util.List;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -23,14 +24,46 @@ public class NamesServiceTest {
     @Autowired
     private NamesService namesService;
 
-    /**
-     * Test of getRandomName method, of class NamesService.
-     */
     @Test
-    public void testGetRandomName() {
-        System.out.println("getRandomName");
-        namesService.getRandomName();
-        Assert.assertTrue(true);
+    public void testAll() {
+        System.out.println("testAll");
+        {//проверим получение случайного имени
+            String randomName = namesService.getRandomName();
+            Assert.assertTrue(randomName != null);
+        }
+        {//проверим получение списка всех имен
+            List<Name> allNames = namesService.getAllNames();
+            Assert.assertTrue(!allNames.isEmpty());
+        }
+        {   //проверим получение имени по id
+            Name unexistedName = namesService.getNameById(999);
+            Assert.assertTrue(unexistedName == null);
+            List<Name> allNames = namesService.getAllNames();
+            Name first = allNames.getFirst();
+            Name loadedName = namesService.getNameById(first.getId());
+            Assert.assertTrue(first.equals(loadedName));
+        }
+        {   //проверим удаление
+            List<Name> allNames = namesService.getAllNames();
+            Name first = allNames.getFirst();
+            Name loadedName = namesService.getNameById(first.getId());
+            Assert.assertTrue(first.equals(loadedName));
+            namesService.deleteName(first);
+            Name deletedName = namesService.getNameById(first.getId());
+            Assert.assertTrue(deletedName == null);
+        }
+        {   //проверим вставку новой записи и ее обновление
+            Name newName = new Name("Василиса", true);
+            Assert.assertTrue(newName.getId() == 0);//у новой записи идентификатор должен быть равен 0
+            int newId = namesService.saveName(newName);
+            Name loadedName = namesService.getNameById(newId);
+            Assert.assertTrue(loadedName != null);
+
+            Name changedName = new Name(newId, "Алиса", true);
+            namesService.saveName(changedName);
+            Name loadedChangedName = namesService.getNameById(newId);
+            Assert.assertTrue(changedName.getName().equals(loadedChangedName.getName()));
+        }
     }
 
 }

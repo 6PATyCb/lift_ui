@@ -4,6 +4,8 @@
  */
 package ru.java_inside.lift_ui.users.names;
 
+import java.util.List;
+
 /**
  *
  * @author 6PATyCb
@@ -11,4 +13,14 @@ package ru.java_inside.lift_ui.users.names;
 public interface NamesDao {
 
     String getRandomName();
+
+    int createName(Name newName);
+
+    void updateName(Name changedName);
+
+    void deleteName(Name name);
+
+    List<Name> getAllNames();
+
+    Name getNameById(int id);
 }

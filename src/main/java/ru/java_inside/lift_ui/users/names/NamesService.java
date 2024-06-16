@@ -4,6 +4,8 @@
  */
 package ru.java_inside.lift_ui.users.names;
 
+import java.util.List;
+
 /**
  *
  * @author 6PATyCb
@@ -16,4 +18,12 @@ public interface NamesService {
      * @return
      */
     String getRandomName();
+
+    int saveName(Name name);
+
+    void deleteName(Name name);
+
+    Name getNameById(int id);
+
+    List<Name> getAllNames();
 }

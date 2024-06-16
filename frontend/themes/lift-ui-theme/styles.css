@@ -7,9 +7,10 @@ html {
 
 /*Ширина меню*/
 vaadin-app-layout::part(drawer) {
-    width: 250px;
+    width: 300px;
 }
 
+/*Стиль панелей*/
 div.as_panel {
     background-image: linear-gradient(var(--lumo-contrast-5pct), var(--lumo-contrast-5pct));
     border-radius: var(--lumo-border-radius-m);
