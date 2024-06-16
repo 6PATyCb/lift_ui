@@ -7,6 +7,7 @@ package ru.java_inside.lift_ui.vaadin.view;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -18,6 +19,7 @@ import ru.java_inside.lift_ui.session.SessionService;
 import ru.java_inside.lift_ui.users.User;
 import ru.java_inside.lift_ui.users.UserService;
 import ru.java_inside.lift_ui.vaadin.LiftUiIcons;
+import ru.java_inside.lift_ui.vaadin.VaadinUtils;
 
 /**
  *
@@ -38,14 +40,17 @@ public class OnlineUsersListView extends VerticalLayout {
     ) {
         this.userService = userService;
         this.sessionService = sessionService;
-
-        update();
-        add(new Button("Обновить", LiftUiIcons.refresh(), e -> {
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+        buttonsLayout.add(new Button("Обновить", LiftUiIcons.refresh(), e -> {
             update();
         }));
+        buttonsLayout.add(VaadinUtils.createHelpButton("Отображает работающих в системе пользователей. Информация о пользователях берется из HTTP сессий приложения. Новый пользователь создается при первом обращении к приложению"));
+        add(buttonsLayout);
         add(grid);
         add(countSpan);
         setSizeFull();
+
+        update();
     }
 
     private void update() {

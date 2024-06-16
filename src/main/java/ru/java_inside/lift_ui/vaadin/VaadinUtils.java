@@ -16,6 +16,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -32,12 +33,6 @@ public final class VaadinUtils {
 
     public static Button createExcelButton() {
         return new Button("Excel");
-    }
-
-    public static Button createHelpButton(String helpText) {
-        Button button = new Button(VaadinIcon.QUESTION.create());
-        button.setTooltipText(helpText);
-        return button;
     }
 
 //    public static H1 createVersionComponent(Clock clock, BuildProperties buildProperties, String springProfile) {
@@ -198,5 +193,14 @@ public final class VaadinUtils {
                 throw new LiftUiException(validationResult.getErrorMessage());
             }
         }
+    }
+
+    public static Button createHelpButton(String helpText) {
+        Button helpButton = new Button(VaadinIcon.QUESTION_CIRCLE.create());
+        helpButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        Tooltip helpButtonTooltip = helpButton.setTooltipText(helpText);
+        helpButtonTooltip.setManual(true);
+        helpButton.addClickListener(e -> helpButtonTooltip.setOpened(!helpButtonTooltip.isOpened()));
+        return helpButton;
     }
 }

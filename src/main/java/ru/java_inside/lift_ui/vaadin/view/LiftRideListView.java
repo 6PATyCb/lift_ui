@@ -7,6 +7,7 @@ package ru.java_inside.lift_ui.vaadin.view;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.router.PageTitle;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.java_inside.lift_ui.lift.lift_ride.LiftRide;
 import ru.java_inside.lift_ui.lift.lift_ride.LiftRideService;
 import ru.java_inside.lift_ui.vaadin.LiftUiIcons;
+import ru.java_inside.lift_ui.vaadin.VaadinUtils;
 
 /**
  *
@@ -48,17 +50,22 @@ public class LiftRideListView extends VerticalLayout {
                 .setHeader("Этажей проехал")
                 .setSortable(true);
         grid.addColumn(new LocalDateTimeRenderer<>(LiftRideWrapper::getCreated, "dd-MM-yyyy HH:mm:ss"))
-       // grid.addColumn(LiftRideWrapper::getCreated)
+                // grid.addColumn(LiftRideWrapper::getCreated)
                 .setHeader("Когда")
                 .setSortable(true);
 
-        update();
-        add(new Button("Обновить", LiftUiIcons.refresh(), e -> {
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+        buttonsLayout.add(new Button("Обновить", LiftUiIcons.refresh(), e -> {
             update();
         }));
+        buttonsLayout.add(VaadinUtils.createHelpButton("История поездки создается на основе события лифта об окончании поездки. Эта запись сохраняется в БД"));
+
+        add(buttonsLayout);
         add(grid);
         add(countSpan);
         setSizeFull();
+
+        update();
     }
 
     private void update() {

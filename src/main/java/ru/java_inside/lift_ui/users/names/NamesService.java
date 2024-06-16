@@ -4,6 +4,7 @@
  */
 package ru.java_inside.lift_ui.users.names;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,6 +23,8 @@ public interface NamesService {
     int saveName(Name name);
 
     void deleteName(Name name);
+
+    void deleteNames(Collection<Name> names);
 
     Name getNameById(int id);
 

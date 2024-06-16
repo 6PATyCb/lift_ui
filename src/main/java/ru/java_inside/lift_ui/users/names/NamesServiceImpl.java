@@ -4,9 +4,11 @@
  */
 package ru.java_inside.lift_ui.users.names;
 
+import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -41,6 +43,17 @@ public class NamesServiceImpl implements NamesService {
             throw new IllegalArgumentException();
         }
         namesDao.deleteName(name);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void deleteNames(Collection<Name> names) {
+        if (names == null || names.isEmpty()) {
+            return;
+        }
+        for (Name name : names) {
+            namesDao.deleteName(name);
+        }
     }
 
     @Override
