@@ -99,7 +99,7 @@ public class MainAppLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        SideNavItem main = new SideNavItem("Главная", MainPageView.class, VaadinIcon.FLAG.create());
+        SideNavItem main = new SideNavItem("Управление лифтом", MainPageView.class, VaadinIcon.DASHBOARD.create());
 
         SideNavItem liftState = new SideNavItem("Состояние лифта", LiftStateView.class, VaadinIcon.BUILDING.create());
         SideNavItem usersOnline = new SideNavItem("Пользователи онлайн", OnlineUsersListView.class, VaadinIcon.GROUP.create());

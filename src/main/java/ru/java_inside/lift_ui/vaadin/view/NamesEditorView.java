@@ -5,6 +5,7 @@
 package ru.java_inside.lift_ui.vaadin.view;
 
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -15,10 +16,16 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.WildcardParameter;
 import com.vaadin.flow.shared.Registration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +44,7 @@ import ru.java_inside.lift_ui.vaadin.VaadinUtils;
  */
 @Route(value = "names_editor", layout = MainAppLayout.class)
 @PageTitle("Редактор имен пользователей")
-public class NamesEditorView extends VerticalLayout {
+public class NamesEditorView extends VerticalLayout implements HasUrlParameter<String> {
 
     private final Grid<NameWrapper> grid = new Grid<>();
     private final Button addButton = new Button("Создать", LiftUiIcons.add());
@@ -74,6 +81,7 @@ public class NamesEditorView extends VerticalLayout {
             selectionListenerReg.remove();
             grid.setSelectionMode(ev.getValue());
             selectionListenerReg = grid.addSelectionListener(e -> refreshButtons(e.getAllSelectedItems()));
+            updateUrlParameters();
             refreshButtons(Collections.EMPTY_SET);
         });
 
@@ -220,6 +228,26 @@ public class NamesEditorView extends VerticalLayout {
                 .collect(Collectors.toList());
         grid.setItems(rows);
         countSpan.setText(String.format("Записей: %d", rows.size()));
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, @WildcardParameter String parameter) {
+        readUrlParameters(parameter);
+    }
+
+    private void readUrlParameters(String parameter) {
+        if (parameter.isEmpty()) {
+            return;
+        }
+        gridSelectionModeComboBox.setValue(parameter.equals("single") ? Grid.SelectionMode.SINGLE : Grid.SelectionMode.MULTI);
+    }
+
+    private void updateUrlParameters() {
+        Grid.SelectionMode selectionMode = gridSelectionModeComboBox.getValue();
+        List<String> routeParameters = new ArrayList<>();
+        routeParameters.add(selectionMode == Grid.SelectionMode.SINGLE ? "single" : "multi");
+        String deepLinkingUrl = RouteConfiguration.forSessionScope().getUrl(getClass(), routeParameters);
+        getUI().map(UI::getPage).map(Page::getHistory).ifPresent(history -> history.replaceState(null, deepLinkingUrl));
     }
 
     @Getter

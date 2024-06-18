@@ -38,11 +38,10 @@ import ru.java_inside.lift_ui.vaadin.custom.Panel;
 
 @PermitAll
 @Route(value = "", layout = MainAppLayout.class)
-@PageTitle("Главная")
+@PageTitle("Управление лифтом")
 public final class MainPageView extends VerticalLayout {
 
     public final static String PATH = "";
-    public final static String HEADER = "Главная";
     private final UserService userService;
     private final LiftService liftService;
     private final ComboBox<Role> selectRoleComboBox = new ComboBox<>();
@@ -221,7 +220,7 @@ public final class MainPageView extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
 
-        HorizontalLayout userLayoutH = new HorizontalLayout(selectRoleComboBox, roleSpan);
+        HorizontalLayout userLayoutH = new HorizontalLayout(selectRoleComboBox, roleSpan, VaadinUtils.createHelpButton("Выбирай роль для своего пользователя"));
         userLayoutH.setSizeFull();
         userLayoutH.setAlignItems(Alignment.CENTER);
 
@@ -232,7 +231,8 @@ public final class MainPageView extends VerticalLayout {
                 new Span("Я на этаже:"), userfloorIntegerField,
                 callFloorButton,
                 stepOnButton,
-                repairButton
+                repairButton,
+                VaadinUtils.createHelpButton("Выбирай этаж на котором ты находишься. Вызывай лифт и заходи в него. Если лифт сломался, то пользователь с ролью лифтера может его починить на том этаже, где он сломался")
         );
         outsideLayoutH.setAlignItems(Alignment.CENTER);
 
@@ -241,7 +241,8 @@ public final class MainPageView extends VerticalLayout {
 
         HorizontalLayout insideLiftLayoutH = new HorizontalLayout(
                 new Span("Я еду на этаж:"), goTofloorIntegerField,
-                goToFloorButton
+                goToFloorButton,
+                VaadinUtils.createHelpButton("Выбирай этаж на который ты поедешь, если ты уже находишься в лифте")
         );
         insideLiftLayoutH.setAlignItems(Alignment.CENTER);
 
