@@ -38,7 +38,7 @@ public class MyWebAppConfig {
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         String dbName = dbUrl.replaceFirst("^.+:([^:]+)$", "$1");
-      //  System.out.println("!!" + dbName);
+        //  System.out.println("!!" + dbName);
         builder.setType(EmbeddedDatabaseType.H2)
                 .setName(dbName)
                 .setScriptEncoding("UTF-8");
@@ -46,7 +46,7 @@ public class MyWebAppConfig {
     }
 
     @Bean
-    @Order(value = 2)
+    @Order(value = SpringProxyOrder.TX_ORDER)
     public DataSourceTransactionManager txManager() {
         DataSourceTransactionManager dstm = new DataSourceTransactionManager();
         dstm.setDataSource(dataSource());

@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import ru.java_inside.lift_ui.lift.lift_ride.LiftRideDaoImpl;
 
 /*
@@ -17,7 +18,8 @@ import ru.java_inside.lift_ui.lift.lift_ride.LiftRideDaoImpl;
  * @author 6PATyCb
  */
 @Configuration
-@EnableCaching
+@EnableCaching(order = SpringProxyOrder.CACHE_ORDER)
+@EnableAspectJAutoProxy
 public class CoreWebAppConfig {
 
     @Bean

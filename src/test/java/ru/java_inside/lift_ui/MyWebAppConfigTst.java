@@ -30,6 +30,7 @@ public class MyWebAppConfigTst {
 
     @Bean
     public DataSource dataSource() {
+       // System.out.println("!!dataSource created");
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         builder.setType(EmbeddedDatabaseType.H2)
                 .setName("forTest")
@@ -42,6 +43,7 @@ public class MyWebAppConfigTst {
     @Bean
     @Order(value = 2)
     public DataSourceTransactionManager txManager() {
+      //  System.out.println("!!txManager created");
         DataSourceTransactionManager dstm = new DataSourceTransactionManager();
         dstm.setDataSource(dataSource());
         return dstm;

@@ -6,6 +6,7 @@ package ru.java_inside.lift_ui.users;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.WrappedSession;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User readUserFromSession(WrappedSession session) {
+        return (User) session.getAttribute(USER_SESSION_KEY);
+    }
+
+    public static User readUserFromSession(HttpSession session) {
+        if (session == null) {
+            return null;
+        }
         return (User) session.getAttribute(USER_SESSION_KEY);
     }
 

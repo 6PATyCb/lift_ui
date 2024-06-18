@@ -9,6 +9,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.java_inside.lift_ui.lift.audit.DeleteAudited;
+import ru.java_inside.lift_ui.lift.audit.SaveAudited;
 
 /**
  *
@@ -24,6 +26,7 @@ public class NamesServiceImpl implements NamesService {
         return namesDao.getRandomName();
     }
 
+    @SaveAudited
     @Override
     public int saveName(Name name) {
         if (name == null) {
@@ -37,6 +40,7 @@ public class NamesServiceImpl implements NamesService {
         }
     }
 
+    @DeleteAudited
     @Override
     public void deleteName(Name name) {
         if (name == null) {
@@ -45,6 +49,7 @@ public class NamesServiceImpl implements NamesService {
         namesDao.deleteName(name);
     }
 
+    @DeleteAudited
     @Transactional(readOnly = false)
     @Override
     public void deleteNames(Collection<Name> names) {

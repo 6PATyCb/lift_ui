@@ -25,6 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class NamesDaoImpl extends NamedParameterJdbcDaoSupport implements NamesDao {
 
+    public NamesDaoImpl() {
+       // System.out.println("!!!NamesDaoImpl " + this);
+    }
+
     @Override
     public String getRandomName() {
         return getJdbcTemplate().queryForObject("select name from lift.rus_names order by random() limit 1", String.class);
