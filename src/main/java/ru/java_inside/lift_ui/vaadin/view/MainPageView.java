@@ -15,6 +15,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -52,10 +53,16 @@ public final class MainPageView extends VerticalLayout {
     private final Button stepOnButton = new Button("войти в лифт", VaadinIcon.SIGN_IN.create());
     private final Button goToFloorButton = new Button("поехать на этаж", VaadinIcon.LIST_OL.create());
     private final Button repairButton = new Button("Починить", VaadinIcon.TOOLS.create());
+    private final ProgressBar liftMovementProgressBar = new ProgressBar();
 
     private Registration pollerRegistration = null;
 
     private Dialog liftStatusDialog = null;
+    /**
+     * Флаг для определения, что я движусь в лифте. Используется, чтобы после
+     * выхода из лифта мой текущий этаж менялся на тот на который я ехал
+     */
+    private boolean moveInside = false;
 
     public MainPageView(
             @Autowired UserService userService,
@@ -67,6 +74,7 @@ public final class MainPageView extends VerticalLayout {
         pollerRegistration = UI.getCurrent().addPollListener(e -> {
             LiftState liftState = liftService.getLiftState();
             updateButtonsAvailibility(liftState);
+            updateLiftMovementProgressBar(liftState);
         });
 
         selectRoleComboBox.setItems(Arrays.asList(Role.values()));
@@ -214,6 +222,18 @@ public final class MainPageView extends VerticalLayout {
         if (availablePassengerActions.contains(PassengerAction.REPAIR) && PassengerAction.REPAIR.isActionAvailable(currentUser, userFloor, liftState)) {
             repairButton.setEnabled(true);
         }
+        {//для обновления значения моего текущего этажа, когда я вышел из лифта
+            if (!moveInside) {
+                if (currentAction.isMovementAction() && userService.getCurrentUser().equals(liftState.user)) {
+                    moveInside = true;
+                }
+            } else {
+                if (liftState.user == null || !userService.getCurrentUser().equals(liftState.user)) {
+                    userfloorIntegerField.setValue(Integer.valueOf(liftState.currentFloor));
+                    moveInside = false;
+                }
+            }
+        }
     }
 
     @Override
@@ -246,8 +266,10 @@ public final class MainPageView extends VerticalLayout {
         );
         insideLiftLayoutH.setAlignItems(Alignment.CENTER);
 
+        VerticalLayout insideLiftLayoutV = new VerticalLayout(insideLiftLayoutH, liftMovementProgressBar);
+
         Panel insidePanel = new Panel("В лифте");
-        insidePanel.add(insideLiftLayoutH);
+        insidePanel.add(insideLiftLayoutV);
 
         add(userPanel);
         add(new Hr());
@@ -267,6 +289,40 @@ public final class MainPageView extends VerticalLayout {
             liftStatusDialog.close();
         }
         UI.getCurrent().setPollInterval(-1);
+    }
+
+    /**
+     * Обновление прогрессбара лифта.
+     *
+     * @param liftState
+     */
+    private void updateLiftMovementProgressBar(LiftState liftState) {
+        if (liftState.action != null && liftState.action.isMovementAction()) {
+
+            if (userfloorIntegerField.getValue().byteValue() == liftState.waitFloor || userService.getCurrentUser().equals(liftState.user)) {//если лифт едет на мой этаж или я еду в лифте
+                liftMovementProgressBar.setIndeterminate(false);
+                byte min = liftState.lastHoldFloor;
+                byte max = liftState.waitFloor;
+                byte curr = liftState.currentFloor;
+                if (max < min) {
+                    byte tmp = max;
+                    max = min;
+                    min = tmp;
+                    curr = (byte) (max - curr + min);
+                }
+                liftMovementProgressBar.setMin(min);
+                liftMovementProgressBar.setMax(max);
+                liftMovementProgressBar.setValue(curr);
+            } else {
+                liftMovementProgressBar.setIndeterminate(true);
+            }
+        } else {
+            liftMovementProgressBar.setMin(0);
+            liftMovementProgressBar.setMax(1);
+            liftMovementProgressBar.setValue(0);
+            liftMovementProgressBar.setIndeterminate(false);
+        }
+
     }
 
 }

@@ -45,13 +45,17 @@ public class LiftEngine {
      */
     private byte currentFloor = 1;
     /**
-     * есть ли пассажир внутри
+     * этаж последней остановки
      */
-    private Passenger passenger;
+    private byte lastHoldFloor = currentFloor;
     /**
      * Этаж, где ожидают лифт
      */
-    private byte waitFloor = 1;
+    private byte waitFloor = currentFloor;
+    /**
+     * есть ли пассажир внутри
+     */
+    private Passenger passenger;
     /**
      * Лифт сломан
      */
@@ -104,6 +108,7 @@ public class LiftEngine {
                     }
 
                 }
+                lastHoldFloor = currentFloor;
                 currentAction = passenger != null ? LiftAction.NO_ACTION_WITH_PASSANGER : LiftAction.NO_ACTION_WHEN_EMPTY;
                 lastStateMessage = String.format("%s ничего не делает на %d этаже", getLiftTextPrefix(), currentFloor);
                 log.info(lastStateMessage);
@@ -175,7 +180,7 @@ public class LiftEngine {
      * @return
      */
     public synchronized LiftState getCurrentLiftState() {
-        return new LiftState(currentFloor, passenger != null ? passenger.getUser() : null, lastStateMessage, currentAction, broken);
+        return new LiftState(currentFloor, lastHoldFloor, waitFloor, passenger != null ? passenger.getUser() : null, lastStateMessage, currentAction, broken);
     }
 
     /**

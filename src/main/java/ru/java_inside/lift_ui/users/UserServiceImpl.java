@@ -40,17 +40,16 @@ public class UserServiceImpl implements UserService {
     public User getCurrentUser() {
         WrappedSession session = UI.getCurrent().getSession().getSession();
         User currentUser = readUserFromSession(session);
-        //чтобы не палить часть sessionId, сделаем от нее md5. Почему берем только первые 6 символов? Чтобы невозможно было восстановить sessionId и чтобы не был сильно длинным toString от пользователя
-        String md5Hex = DigestUtils.md5Hex(session.getId().substring(0, 6)).toUpperCase();
         if (currentUser == null) {
             String randomName = namesService.getRandomName();
+            //чтобы не палить часть sessionId, сделаем от нее md5. Почему берем только первые 6 символов? Чтобы невозможно было восстановить sessionId и чтобы не был сильно длинным toString от пользователя
+            String md5Hex = DigestUtils.md5Hex(session.getId().substring(0, 6)).toUpperCase();
             currentUser = new User(md5Hex.substring(0, 6), randomName, Role.PASSENGER);
             session.setAttribute(USER_SESSION_KEY, currentUser);
             log.info("Новый пользователь создан {}", currentUser);
         } else {
             log.debug("Пользователь возвращен из сессии {}", currentUser);
         }
-
         return currentUser;
     }
 

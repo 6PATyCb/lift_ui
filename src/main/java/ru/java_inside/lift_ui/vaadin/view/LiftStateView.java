@@ -26,6 +26,8 @@ public class LiftStateView extends VerticalLayout {
 
     private final Span liftFullStateSpan = new Span();
     private final Span currentFloorSpan = new Span();
+    private final Span lastHoldFloorrSpan = new Span();
+    private final Span waitFloorSpan = new Span();
     private final Span passangerSpan = new Span();
     private final Span lastMsgSpan = new Span();
     private final Span currentActionSpan = new Span();
@@ -39,6 +41,8 @@ public class LiftStateView extends VerticalLayout {
         this.liftService = liftService;
         add(liftFullStateSpan);
         add(currentFloorSpan);
+        add(lastHoldFloorrSpan);
+        add(waitFloorSpan);
         add(passangerSpan);
         add(lastMsgSpan);
         add(currentActionSpan);
@@ -52,6 +56,8 @@ public class LiftStateView extends VerticalLayout {
             LiftState liftState = liftService.getLiftState();
             liftFullStateSpan.setText(String.format("Полное состояние: %s", liftState.toString()));
             currentFloorSpan.setText(String.format("Текущий этаж: %d", liftState.currentFloor));
+            lastHoldFloorrSpan.setText(String.format("Этаж последней остановки: %d", liftState.lastHoldFloor));
+            waitFloorSpan.setText(String.format("Этаж на который направляется лифт: %d", liftState.waitFloor));
             passangerSpan.setText(String.format("Пассажир: %s", liftState.user == null ? "Нет" : liftState.user));
             lastMsgSpan.setText(String.format("Последнее сообщение: %s", liftState.lastStateMessage));
             currentActionSpan.setText(String.format("Текущее действие: %s", liftState.action));

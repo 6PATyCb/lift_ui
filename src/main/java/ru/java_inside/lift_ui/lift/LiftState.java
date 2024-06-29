@@ -21,6 +21,15 @@ public class LiftState {
      * текущий этаж
      */
     public final byte currentFloor;
+
+    /**
+     * этаж последней остановки
+     */
+    public final byte lastHoldFloor;
+    /**
+     * Этаж, где ожидают лифт
+     */
+    public final byte waitFloor;
     /**
      * есть ли пассажир внутри
      */
